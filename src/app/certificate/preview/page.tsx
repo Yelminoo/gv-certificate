@@ -1,9 +1,10 @@
 "use client"
 
 import { useSearchParams } from "next/navigation"
+import { Suspense } from "react"
 import CertificateLayout from "@/components/CertificateLayout"
 
-export default function CertificatePreviewPage() {
+function CertificatePreview() {
   const searchParams = useSearchParams()
   const encoded = searchParams.get("data")
 
@@ -42,5 +43,13 @@ export default function CertificatePreviewPage() {
 
       </div>
     </main>
+  )
+}
+
+export default function CertificatePreviewPage() {
+  return (
+    <Suspense fallback={<div className="p-10">Loading certificate...</div>}>
+      <CertificatePreview />
+    </Suspense>
   )
 }

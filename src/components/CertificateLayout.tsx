@@ -16,7 +16,7 @@ export default function CertificateLayout({
   return (
     <div
       id="certificate"
-      className="w-[1123px] h-[794px] bg-white p-20 text-center border-8 border-gray-800 relative"
+      className="w-280.75 h-198.5 bg-white p-20 text-center border-8 border-gray-800 relative"
     >
       {/* QR CODE */}
       {qrValue && (

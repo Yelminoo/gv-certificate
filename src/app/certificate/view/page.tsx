@@ -22,9 +22,20 @@ function CertificateView() {
     <main className="min-h-screen bg-gray-100 p-6">
       <div className="flex justify-center">
         <CertificateLayout
-          fullName={data.fullName}
-          title={data.title}
-          issueDate={data.issueDate}
+          certificateNo={data.certificateNo}
+          date={data.date}
+          identification={data.identification}
+          weight={data.weight}
+          dimensions={data.dimensions}
+          cut={data.cut}
+          shape={data.shape}
+          color={data.color}
+          comment1={data.comment1}
+          comment2={data.comment2}
+          origin={data.origin}
+          verifiedBy={data.verifiedBy}
+          certifiedBy={data.certifiedBy}
+          qrValue={data.qrValue}
         />
       </div>
     </main>

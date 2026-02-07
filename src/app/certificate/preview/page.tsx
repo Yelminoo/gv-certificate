@@ -21,12 +21,12 @@ function CertificatePreview() {
   }
 
   return (
-    <main className="min-h-screen bg-gray-100 p-6">
+    <main className="min-h-screen bg-gray-50 p-6">
       {/* Action bar */}
       <div className="max-w-6xl mx-auto mb-6 flex justify-end print:hidden">
         <button
           onClick={handlePrint}
-          className="bg-black text-white px-6 py-3 rounded-lg"
+          className="bg-[#8d1b20] hover:bg-[#6d1418] text-white px-6 py-3 rounded-lg font-medium transition-colors shadow-md"
         >
           Print / Save PDF
         </button>
@@ -35,12 +35,21 @@ function CertificatePreview() {
       {/* Certificate */}
       <div className="flex justify-center">
         <CertificateLayout
-        fullName={data.fullName}
-        title={data.title}
-        issueDate={data.issueDate}
-        qrValue={qrValue}
-      />
-
+          certificateNo={data.certificateNo}
+          date={data.date}
+          identification={data.identification}
+          weight={data.weight}
+          dimensions={data.dimensions}
+          cut={data.cut}
+          shape={data.shape}
+          color={data.color}
+          comment1={data.comment1}
+          comment2={data.comment2}
+          origin={data.origin}
+          verifiedBy={data.verifiedBy}
+          certifiedBy={data.certifiedBy}
+          qrValue={qrValue}
+        />
       </div>
     </main>
   )

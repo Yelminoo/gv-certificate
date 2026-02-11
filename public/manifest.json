@@ -1,0 +1,22 @@
+{
+  "name": "GV Certificate - Gemstone Certificate Generator",
+  "short_name": "GV Certificate",
+  "description": "Create professional gemstone certificates with QR verification and digital signature",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#8d1b20",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
+}

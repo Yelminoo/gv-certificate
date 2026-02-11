@@ -15,13 +15,40 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Certificate Generator - Create Professional Certificates",
-  description: "Create professional certificates with QR verification and digital signature. Generate, print, and verify certificates instantly.",
+  title: "GV Certificate - Gemstone Certificate Generator",
+  description: "Create professional gemstone certificates with QR verification and digital signature. Generate, print, and verify certificates instantly with our secure certification system.",
+  applicationName: "GV Certificate",
+  keywords: ["gemstone certificate", "certificate generator", "QR verification", "digital signature", "gemological certificate", "gemstone authentication"],
+  authors: [{ name: "GV Certificate" }],
+  creator: "GV Certificate",
+  publisher: "GV Certificate",
+  manifest: '/manifest.json',
   icons: {
     icon: [
       { url: '/favicon.svg', type: 'image/svg+xml' },
+      { url: '/KLLogo.svg', type: 'image/svg+xml' },
     ],
     apple: '/apple-touch-icon.png',
+  },
+  openGraph: {
+    type: 'website',
+    title: "GV Certificate - Gemstone Certificate Generator",
+    description: "Create professional gemstone certificates with QR verification and digital signature. Generate, print, and verify certificates instantly.",
+    siteName: "GV Certificate",
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: "GV Certificate - Gemstone Certificate Generator",
+    description: "Create professional gemstone certificates with QR verification and digital signature.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 5,
   },
 };
 

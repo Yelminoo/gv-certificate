@@ -21,7 +21,7 @@ function CertificatePreview() {
   }
 
   return (
-    <main className="min-h-screen bg-gray-50 p-6">
+    <main className="min-h-screen bg-gray-50 p-6 print:bg-white print:p-0">
       {/* Action bar */}
       <div className="max-w-6xl mx-auto mb-6 flex justify-end print:hidden">
         <button
@@ -33,7 +33,7 @@ function CertificatePreview() {
       </div>
 
       {/* Certificate */}
-      <div className="flex justify-center">
+      <div className="flex justify-center print:block">
         <CertificateLayout
           certificateNo={data.certificateNo}
           date={data.date}
@@ -49,6 +49,8 @@ function CertificatePreview() {
           verifiedBy={data.verifiedBy}
           certifiedBy={data.certifiedBy}
           qrValue={qrValue}
+          imageUrl={data.imageUrl}
+          signatureUrl={data.signatureUrl}
         />
       </div>
     </main>

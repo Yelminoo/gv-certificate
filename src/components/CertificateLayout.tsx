@@ -16,6 +16,8 @@ type CertificateLayoutProps = {
   verifiedBy?: string
   certifiedBy?: string
   qrValue?: string
+  imageUrl?: string
+  signatureUrl?: string
 }
 
 export default function CertificateLayout({
@@ -33,6 +35,8 @@ export default function CertificateLayout({
   verifiedBy,
   certifiedBy,
   qrValue,
+  imageUrl,
+  signatureUrl,
 }: CertificateLayoutProps) {
   return (
     <div
@@ -123,6 +127,19 @@ export default function CertificateLayout({
         </div>
 
         <div className="flex flex-col justify-between">
+          {imageUrl && (
+            <div className="border-2 border-[#8d1b20] rounded-lg p-3 bg-white mb-4">
+              <p className="text-xs text-gray-600 uppercase tracking-wide text-center mb-2">Gemstone Image</p>
+              <div className="w-full h-48 flex items-center justify-center bg-gray-50 rounded">
+                <img 
+                  src={imageUrl} 
+                  alt="Gemstone" 
+                  className="w-full h-full object-contain"
+                />
+              </div>
+            </div>
+          )}
+
           {origin && (
             <div className="border border-[#8d1b20] rounded-lg p-4 bg-gray-50">
               <p className="text-sm text-gray-600 uppercase tracking-wide text-center mb-2">Origin</p>
@@ -134,7 +151,20 @@ export default function CertificateLayout({
             <div className="text-right">
               {certifiedBy && (
                 <div className="mb-6">
-                  <div className="border-t-2 border-[#8d1b20] w-64 ml-auto mb-2"></div>
+                  {signatureUrl ? (
+                    <div className="flex flex-col items-end">
+                      <div className="w-48 h-16 mb-2 flex items-center justify-end">
+                        <img 
+                          src={signatureUrl} 
+                          alt="E-Signature" 
+                          className="max-w-full max-h-full object-contain"
+                        />
+                      </div>
+                      <div className="border-t-2 border-[#8d1b20] w-48 mb-2"></div>
+                    </div>
+                  ) : (
+                    <div className="border-t-2 border-[#8d1b20] w-64 ml-auto mb-2"></div>
+                  )}
                   <p className="text-xs text-gray-600 uppercase">E-Signature</p>
                   <p className="font-semibold text-gray-900">{certifiedBy}</p>
                   <p className="text-xs text-gray-500">Graduate Gemologist AJP</p>

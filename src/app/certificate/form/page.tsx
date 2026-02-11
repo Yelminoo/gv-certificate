@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
+import SignaturePad from "@/components/SignaturePad"
 
 export default function CertificateFormPage() {
   const router = useRouter()
@@ -20,13 +21,62 @@ export default function CertificateFormPage() {
     origin: "",
     verifiedBy: "",
     certifiedBy: "",
+    imageUrl: "",
+    signatureUrl: "",
   })
+
+  const [uploading, setUploading] = useState(false)
+  const [uploadError, setUploadError] = useState("")
+  const [signatureSaved, setSignatureSaved] = useState(false)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setForm({
       ...form,
       [e.target.name]: e.target.value,
     })
+  }
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    setUploading(true)
+    setUploadError("")
+
+    try {
+      const formData = new FormData()
+      formData.append('file', file)
+
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      })
+
+      const data = await response.json()
+
+      if (data.success) {
+        setForm(prev => ({
+          ...prev,
+          imageUrl: data.url
+        }))
+      } else {
+        setUploadError(data.error || 'Upload failed')
+      }
+    } catch (error) {
+      setUploadError('Failed to upload image')
+      console.error('Upload error:', error)
+    } finally {
+      setUploading(false)
+    }
+  }
+
+  const handleSignatureSave = (dataUrl: string) => {
+    setForm(prev => ({
+      ...prev,
+      signatureUrl: dataUrl
+    }))
+    setSignatureSaved(true)
+    setTimeout(() => setSignatureSaved(false), 3000)
   }
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -119,6 +169,57 @@ export default function CertificateFormPage() {
           />
         </div>
 
+        {/* Image Upload Section - Separated Layout */}
+        <div className="border-2 border-dashed border-gray-300 rounded-xl p-6 bg-gray-50">
+          <label className="text-sm font-medium text-gray-700 mb-3 block">
+            Gemstone Image Upload
+          </label>
+          
+          <div className="flex flex-col md:flex-row gap-6">
+            {/* Upload Control */}
+            <div className="flex-1">
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleFileUpload}
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-gray-900 bg-white file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-[#8d1b20] file:text-white hover:file:bg-[#6d1418] file:cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#8d1b20]"
+                disabled={uploading}
+              />
+              {uploading && (
+                <p className="text-sm text-blue-600 mt-2 flex items-center gap-2">
+                  <span className="animate-pulse">⏳</span> Uploading...
+                </p>
+              )}
+              {uploadError && (
+                <p className="text-sm text-red-600 mt-2">❌ {uploadError}</p>
+              )}
+              {form.imageUrl && !uploading && (
+                <p className="text-sm text-green-600 mt-2">✓ Image uploaded successfully!</p>
+              )}
+            </div>
+
+            {/* Fixed Frame Preview */}
+            <div className="flex-shrink-0">
+              <div className="w-48 h-48 border-2 border-gray-300 rounded-lg bg-white flex items-center justify-center overflow-hidden">
+                {form.imageUrl ? (
+                  <img 
+                    src={form.imageUrl} 
+                    alt="Gemstone preview" 
+                    className="w-full h-full object-contain"
+                  />
+                ) : (
+                  <div className="text-center text-gray-400 p-4">
+                    <svg className="w-12 h-12 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    <p className="text-xs">No image uploaded</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div>
           <label className="text-sm text-gray-600 mb-1 block">Comments (max 2 lines)</label>
           <input
@@ -161,6 +262,23 @@ export default function CertificateFormPage() {
             className="w-full border border-gray-300 rounded-lg px-3 py-2 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#8d1b20]"
             onChange={handleChange}
           />
+        </div>
+
+        {/* E-Signature Drawing Section */}
+        <div className="border-2 border-dashed border-gray-300 rounded-xl p-6 bg-gray-50">
+          <label className="text-sm font-medium text-gray-700 mb-3 block">
+            Draw Your E-Signature
+          </label>
+          
+          <div className="flex flex-col items-start">
+            <SignaturePad 
+              onSave={handleSignatureSave}
+              existingSignature={form.signatureUrl}
+            />
+            {signatureSaved && (
+              <p className="text-sm text-green-600 mt-2">✓ Signature saved successfully!</p>
+            )}
+          </div>
         </div>
 
         <button

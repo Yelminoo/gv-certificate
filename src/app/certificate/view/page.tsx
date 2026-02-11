@@ -36,6 +36,8 @@ function CertificateView() {
           verifiedBy={data.verifiedBy}
           certifiedBy={data.certifiedBy}
           qrValue={data.qrValue}
+          imageUrl={data.imageUrl}
+          signatureUrl={data.signatureUrl}
         />
       </div>
     </main>

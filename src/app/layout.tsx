@@ -15,13 +15,13 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "GV Certificate - Gemstone Certificate Generator",
+  title: "Trusted Gemlab - Gemstone Certificate Generator",
   description: "Create professional gemstone certificates with QR verification and digital signature. Generate, print, and verify certificates instantly with our secure certification system.",
-  applicationName: "GV Certificate",
+  applicationName: "Trusted Gemlab",
   keywords: ["gemstone certificate", "certificate generator", "QR verification", "digital signature", "gemological certificate", "gemstone authentication"],
-  authors: [{ name: "GV Certificate" }],
-  creator: "GV Certificate",
-  publisher: "GV Certificate",
+  authors: [{ name: "Trusted Gemlab" }],
+  creator: "Trusted Gemlab",
+  publisher: "Trusted Gemlab",
   manifest: '/manifest.json',
   icons: {
     icon: [
@@ -32,13 +32,13 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: 'website',
-    title: "GV Certificate - Gemstone Certificate Generator",
+    title: "Trusted Gemlab - Gemstone Certificate Generator",
     description: "Create professional gemstone certificates with QR verification and digital signature. Generate, print, and verify certificates instantly.",
-    siteName: "GV Certificate",
+    siteName: "Trusted Gemlab",
   },
   twitter: {
     card: 'summary_large_image',
-    title: "GV Certificate - Gemstone Certificate Generator",
+    title: "Trusted Gemlab - Gemstone Certificate Generator",
     description: "Create professional gemstone certificates with QR verification and digital signature.",
   },
   robots: {

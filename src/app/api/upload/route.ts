@@ -1,6 +1,26 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { writeFile } from 'fs/promises'
-import { join } from 'path'
+import { randomUUID } from 'crypto'
+import { PutObjectCommand } from '@aws-sdk/client-s3'
+import { prisma } from '@/lib/prisma'
+import { buildSpacesPublicUrl, getSpacesClient, getSpacesConfig } from '@/lib/spaces'
+
+export const runtime = 'nodejs'
+
+function sanitizeFilename(fileName: string): { baseName: string; extension: string } {
+  const lastDot = fileName.lastIndexOf('.')
+  const base = (lastDot > 0 ? fileName.slice(0, lastDot) : fileName)
+    .toLowerCase()
+    .replace(/[^a-z0-9-_]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+  const extension = (lastDot > 0 ? fileName.slice(lastDot + 1) : 'bin')
+    .toLowerCase()
+    .replace(/[^a-z0-9]/g, '')
+
+  return {
+    baseName: base || 'file',
+    extension: extension || 'bin',
+  }
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -14,36 +34,49 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Get the file extension
-    const fileExtension = file.name.split('.').pop()
-    
-    // Create filename with datetime and original name
+    const config = getSpacesConfig()
+    const spaces = getSpacesClient(config)
+
     const now = new Date()
-    const datetime = now.toISOString()
-      .replace(/:/g, '-')
-      .replace(/\..+/, '')
-      .replace('T', '_')
-    
-    // Remove extension from original name
-    const originalNameWithoutExt = file.name.substring(0, file.name.lastIndexOf('.')) || file.name
-    
-    const newFileName = `${datetime}_${originalNameWithoutExt}.${fileExtension}`
-    
-    // Convert file to buffer
+    const year = String(now.getUTCFullYear())
+    const month = String(now.getUTCMonth() + 1).padStart(2, '0')
+    const { baseName, extension } = sanitizeFilename(file.name || 'upload.bin')
+    const fileName = `${randomUUID()}-${baseName}.${extension}`
+    const objectKey = `${config.projectPrefix}/${year}/${month}/${fileName}`
+
     const bytes = await file.arrayBuffer()
     const buffer = Buffer.from(bytes)
+    const mimeType = file.type || 'application/octet-stream'
 
-    // Save to public/uploads
-    const uploadDir = join(process.cwd(), 'public', 'uploads')
-    const filePath = join(uploadDir, newFileName)
-    
-    await writeFile(filePath, buffer)
+    await spaces.send(
+      new PutObjectCommand({
+        Bucket: config.bucket,
+        Key: objectKey,
+        Body: buffer,
+        ContentType: mimeType,
+        ContentLength: buffer.length,
+        CacheControl: 'public, max-age=31536000, immutable',
+        ACL: 'public-read', // Make uploaded file public
+      })
+    )
 
-    // Return the public URL
+    const url = buildSpacesPublicUrl(config, objectKey)
+
+    await prisma.upload.create({
+      data: {
+        fileName,
+        originalName: file.name,
+        fileSize: file.size,
+        mimeType,
+        url,
+      },
+    })
+
     return NextResponse.json({
       success: true,
-      fileName: newFileName,
-      url: `/uploads/${newFileName}`
+      fileName,
+      key: objectKey,
+      url,
     })
   } catch (error) {
     console.error('Upload error:', error)

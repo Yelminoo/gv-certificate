@@ -1,0 +1,52 @@
+model User {
+  id        Int     @id @default(autoincrement())
+  username  String  @unique
+  password  String
+  role      String  @default("admin")
+}
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Certificate {
+  id             Int      @id @default(autoincrement())
+  certificateNo  String   @unique @map("certificate_no")
+  issueDate      String   @map("issue_date")
+  identification String
+  weight         String
+  dimensions     String?
+  cut            String?
+  shape          String?
+  color          String?
+  comment1       String?
+  comment2       String?
+  origin         String?
+  verifiedBy     String?  @map("verified_by")
+  certifiedBy    String?  @map("certified_by")
+  imageUrl       String?  @map("image_url")
+  signatureUrl   String?  @map("signature_url")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  @@index([certificateNo], map: "idx_certificate_no")
+  @@index([createdAt], map: "idx_created_at")
+  @@map("certificates")
+}
+
+model Upload {
+  id           Int      @id @default(autoincrement())
+  fileName     String   @map("file_name")
+  originalName String   @map("original_name")
+  fileSize     Int?     @map("file_size")
+  mimeType     String?  @map("mime_type")
+  url          String
+  uploadedAt   DateTime @default(now()) @map("uploaded_at")
+
+  @@index([fileName], map: "idx_file_name")
+  @@map("uploads")
+}

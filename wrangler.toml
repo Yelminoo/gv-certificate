@@ -1,0 +1,19 @@
+name = "gv-certificate"
+main = ".open-next/worker.js"
+compatibility_date = "2026-02-20"
+compatibility_flags = ["nodejs_compat"]
+
+[assets]
+directory = ".open-next/assets"
+binding = "ASSETS"
+
+# D1 Database
+[[d1_databases]]
+binding = "DB"
+database_name = "gv-certificates"
+database_id = "7ec53162-9b5b-411d-a229-49485aae3bb9"
+
+# R2 Bucket for image storage (optional - better for images than D1)
+[[r2_buckets]]
+binding = "IMAGES"
+bucket_name = "gv-certificate-images"

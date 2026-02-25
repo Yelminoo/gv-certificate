@@ -79,8 +79,22 @@ export default function CertificateFormPage() {
     setTimeout(() => setSignatureSaved(false), 3000)
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+
+    // Save certificate to database (D1 or file logs)
+    try {
+      await fetch('/api/certificates', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(form),
+      })
+    } catch (error) {
+      console.error('Failed to save certificate:', error)
+      // Continue even if saving fails
+    }
 
     const encodedData = btoa(JSON.stringify(form))
     router.push(`/certificate/preview?data=${encodedData}`)

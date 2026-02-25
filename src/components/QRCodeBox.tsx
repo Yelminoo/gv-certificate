@@ -11,7 +11,7 @@ export default function QRCodeBox({ value }: QRCodeBoxProps) {
   const [qr, setQr] = useState<string>("")
 
   useEffect(() => {
-    QRCode.toDataURL(value, { width: 150 })
+    QRCode.toDataURL(value, { width: 300, margin: 1 })
       .then(setQr)
       .catch(console.error)
   }, [value])
@@ -22,7 +22,7 @@ export default function QRCodeBox({ value }: QRCodeBoxProps) {
     <img
       src={qr}
       alt="Certificate QR Code"
-      className="w-32 h-32"
+      className="w-full h-full object-contain"
     />
   )
 }

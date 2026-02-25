@@ -5,25 +5,44 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "preview": "opennextjs-cloudflare && wrangler dev",
+    "deploy": "opennextjs-cloudflare && wrangler deploy",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:deploy": "prisma migrate deploy",
+    "prisma:studio": "prisma studio",
+    "db:migrate": "wrangler d1 execute gv-certificates --file=./migrations/0001_initial_schema.sql",
+    "db:query": "wrangler d1 execute gv-certificates --command",
+    "db:list": "wrangler d1 list",
+    "db:info": "wrangler d1 info gv-certificates",
+    "cf:dev": "wrangler pages dev .vercel/output/static --compatibility-date=2024-01-01 --d1=DB=gv-certificates",
+    "cf:deploy": "npm run pages:build && wrangler pages deploy .vercel/output/static"
   },
   "dependencies": {
-    "next": "16.1.4",
+    "@aws-sdk/client-s3": "^3.995.0",
+    "@prisma/client": "^6.16.2",
+    "chart.js": "^4.5.1",
+    "next": "15.1.12",
     "qrcode": "^1.5.4",
     "react": "19.2.3",
+    "react-chartjs-2": "^5.3.1",
     "react-dom": "19.2.3",
     "tesseract.js": "^7.0.0"
   },
   "devDependencies": {
+    "@opennextjs/cloudflare": "^1.2.2",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/qrcode": "^1.5.6",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "16.1.4",
+    "eslint-config-next": "15.1.12",
+    "prisma": "^6.16.2",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "wrangler": "^4.67.0"
   }
 }

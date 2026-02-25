@@ -1,6 +1,6 @@
 {
-  "name": "GV Certificate - Gemstone Certificate Generator",
-  "short_name": "GV Certificate",
+  "name": "Trusted Gemlab - Gemstone Certificate Generator",
+  "short_name": "Trusted Gemlab",
   "description": "Create professional gemstone certificates with QR verification and digital signature",
   "start_url": "/",
   "display": "standalone",

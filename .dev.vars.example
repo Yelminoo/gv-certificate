@@ -1,0 +1,8 @@
+# Cloudflare Development Variables
+# Copy this file to .dev.vars and fill in your values
+
+# D1 Database ID (get from: wrangler d1 list)
+DATABASE_ID=your_database_id_here
+
+# R2 Bucket name (optional, for image storage)
+R2_BUCKET_NAME=gv-certificate-images

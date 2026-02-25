@@ -9,7 +9,7 @@ export default function Header() {
           <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
             <Image src="/KLLogo.svg" alt="KL Logo" width={48} height={48} className="w-12 h-12" />
             <div>
-              <h1 className="text-2xl font-bold text-[#8d1b20]">KL Certificate</h1>
+              <h1 className="text-2xl font-bold text-[#8d1b20]">Trusted Gemlab</h1>
               <p className="text-xs text-gray-600">Gemological Laboratory</p>
             </div>
           </Link>

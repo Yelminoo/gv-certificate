@@ -1,3 +1,4 @@
+
 @import "tailwindcss";
 
 :root {
@@ -11,6 +12,13 @@
     --foreground: #ededed;
   }
 }
+/* Remove all borders, outlines, and box-shadows for certificate export */
+#certificate, #certificate * {
+  border: 0 !important;
+  outline: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
 
 body {
   background: var(--background);
@@ -21,8 +29,8 @@ body {
 /* Print Styles */
 @media print {
   @page {
+    size: 7in 4in;
     margin: 0;
-    size: A4 landscape;
   }
   
   body {
@@ -31,9 +39,35 @@ body {
     padding: 0;
   }
   
+  body * {
+    visibility: hidden;
+  }
+  
+  #certificate,
+  #certificate * {
+    visibility: visible;
+  }
+  
+  #certificate {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 7in !important;
+    height: 4in !important;
+    box-shadow: none !important;
+    page-break-after: avoid;
+    page-break-inside: avoid;
+  }
+  
   main {
     background: white !important;
     padding: 0 !important;
     margin: 0 !important;
   }
+}
+
+#certificate, #certificate * {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
 }

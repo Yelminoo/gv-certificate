@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation"
 import { Suspense, useState, useRef, useEffect } from "react"
 import CertificateLayout from "@/components/CertificateLayout"
 import CertificateDesign2 from "@/components/CertificateDesign2"
-import domtoimage from "dom-to-image-more"
+// domtoimage will be imported dynamically inside handleExportPNG
 // import DebugCertificate from "@/components/DebugCertificate"
 
 interface CertificateData {
@@ -65,6 +65,7 @@ function CertificatePreviewOptions() {
   const handleExportPNG = async () => {
     if (!certRef.current) return;
     await new Promise((resolve) => setTimeout(resolve, 100));
+    const domtoimage = await import("dom-to-image-more");
     domtoimage.toPng(certRef.current)
       .then((dataUrl: string) => {
         const link = document.createElement('a');

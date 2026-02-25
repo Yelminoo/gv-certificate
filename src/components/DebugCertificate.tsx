@@ -6,7 +6,7 @@ interface DebugCertificateProps {
   date: string;
   identification: string;
   weight: string;
-  imageUrl: string;
+  // imageUrl: string; // Removed as unused
   signatureUrl: string;
 }
 
@@ -15,7 +15,7 @@ export default function DebugCertificate({
   date,
   identification,
   weight,
-  imageUrl,
+  // imageUrl, // Removed as unused
   signatureUrl,
 }: DebugCertificateProps) {
   const certRef = useRef<HTMLDivElement>(null);

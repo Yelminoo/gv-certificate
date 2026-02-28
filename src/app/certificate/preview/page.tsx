@@ -69,12 +69,11 @@ function CertificatePreviewOptions() {
     }
   }, [searchParams]);
 
-  // const handlePrint = () => {
-  //   window.print();
-  // };
+  // Only run browser-only code on the client
 
+  // Example: dynamic import for dom-to-image-more
   // const handleExportPNG = async () => {
-  //   if (!certRef.current) return;
+  //   if (typeof window === "undefined" || !certRef.current) return;
   //   await new Promise((resolve) => setTimeout(resolve, 100));
   //   const domtoimage = await import("dom-to-image-more");
   //   domtoimage.toPng(certRef.current)
@@ -158,11 +157,10 @@ function CertificatePreviewOptions() {
 
 // ClassicWithPrint wraps CertificateLayout and adds print/png buttons inside
 import React, { useRef } from "react";
-import domtoimage from "dom-to-image-more";
 function ClassicWithPrint({ data, qrValue }: { data: CertificateData, qrValue: string }) {
   const certRef = useRef<HTMLDivElement>(null);
   const handlePrint = () => {
-    if (!certRef.current) return;
+    if (typeof window === "undefined" || !certRef.current) return;
     const printWindow = window.open("", "_blank");
     if (!printWindow) return;
     printWindow.document.write(`
@@ -177,8 +175,9 @@ function ClassicWithPrint({ data, qrValue }: { data: CertificateData, qrValue: s
     };
   };
   const handleExportPNG = async () => {
-    if (!certRef.current) return;
+    if (typeof window === "undefined" || !certRef.current) return;
     await new Promise((resolve) => setTimeout(resolve, 100));
+    const domtoimage = await import("dom-to-image-more");
     domtoimage.toPng(certRef.current)
       .then((dataUrl: string) => {
         const link = document.createElement('a');

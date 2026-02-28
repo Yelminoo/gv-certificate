@@ -16,13 +16,17 @@ export default function QRCodeBox({ value }: QRCodeBoxProps) {
       .catch(console.error)
   }, [value])
 
-  if (!qr) return null
+  if (!qr) return null;
 
-  return (
-    <img
-      src={qr}
-      alt="Certificate QR Code"
-      className="w-full h-full object-contain"
-    />
-  )
+  // Only render <img> if qr is a valid data URL or image URL
+  if (typeof qr === "string" && (qr.startsWith("data:image") || qr.startsWith("/"))) {
+    return (
+      <img
+        src={qr}
+        alt="Certificate QR Code"
+        className="w-full h-full object-contain"
+      />
+    );
+  }
+  return null;
 }

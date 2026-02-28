@@ -16,7 +16,7 @@ export default function DebugCertificate({
   identification,
   weight,
   // imageUrl, // Removed as unused
-  signatureUrl,
+  // signatureUrl,
 }: DebugCertificateProps) {
   const certRef = useRef<HTMLDivElement>(null);
 
@@ -83,18 +83,14 @@ export default function DebugCertificate({
         </div>
 
         <div style={{ marginTop: '10px' }}>
-          <img
+          {/* <Image
             src={signatureUrl}
             alt="Signature"
-            crossOrigin="anonymous"
-            style={{
-              height: '40px',
-              display: 'block',
-              margin: '0 auto',
-              backgroundColor: '#ffffff',
-              border: '0',
-            }}
-          />
+            width={40}
+            height={40}
+            className="block mx-auto"
+            priority
+          /> */}
         </div>
       </div>
 

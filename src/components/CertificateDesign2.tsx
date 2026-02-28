@@ -2,7 +2,7 @@
 
 import QRCodeBox from "@/components/QRCodeBox";
 import React, { useRef, useState } from "react";
-import { toPng } from "html-to-image";
+// toPng will be dynamically imported in the handler to avoid SSR issues
 
 interface CertificateDesign2Props {
   id: number;
@@ -24,7 +24,6 @@ interface CertificateDesign2Props {
 
 export default function CertificateDesign2(props: CertificateDesign2Props) {
   const {
-    id,
     no,
     date,
     identification,
@@ -39,14 +38,14 @@ export default function CertificateDesign2(props: CertificateDesign2Props) {
     identifiedBy,
     signatureUrl,
     qrValue,
-    ...rest
+    // props spread removed as 'rest' is unused
   } = props;
 
   const certRef = useRef<HTMLDivElement>(null);
 
   const [imagesLoaded, setImagesLoaded] = useState({
-    gem: false,
-    sign: false,
+    gem: !imageUrl,
+    sign: !signatureUrl,
   });
 
   const waitForImages = async () => {
@@ -61,10 +60,12 @@ export default function CertificateDesign2(props: CertificateDesign2Props) {
   };
 
   const handleDownload = async () => {
-    if (!certRef.current) return;
+    if (typeof window === "undefined" || !certRef.current) return;
 
     await waitForImages();
 
+    // Dynamically import toPng only on client
+    const { toPng } = await import("html-to-image");
     const dataUrl = await toPng(certRef.current, {
       backgroundColor: "#ffffff",
       pixelRatio: 2,
@@ -78,11 +79,12 @@ export default function CertificateDesign2(props: CertificateDesign2Props) {
   };
 
   const handlePrint = async () => {
-    if (!certRef.current) return;
+    if (typeof window === "undefined" || !certRef.current) return;
 
     await waitForImages();
 
     const printWindow = window.open("", "_blank");
+    if (!printWindow) return;
     printWindow.document.write(`
       <html>
       <head>
@@ -236,17 +238,15 @@ export default function CertificateDesign2(props: CertificateDesign2Props) {
             <img
               src={imageUrl}
               crossOrigin="anonymous"
-              onLoad={() =>
-                setImagesLoaded((p) => ({ ...p, gem: true }))
-              }
+              onLoad={() => setImagesLoaded((p) => ({ ...p, gem: true }))}
+              onError={() => setImagesLoaded((p) => ({ ...p, gem: true }))}
               style={{
                 maxHeight: "100px",
                 marginTop: "10px",
               }}
+              alt="Gemstone"
             />
-          ) : (
-            imagesLoaded.gem === false && setTimeout(() => setImagesLoaded((p) => ({ ...p, gem: true })), 0)
-          )}
+          ) : null}
 
           <div style={{ marginTop: "10px", textAlign: "center" }}>
             <div>Origin : {origin}</div>
@@ -257,17 +257,15 @@ export default function CertificateDesign2(props: CertificateDesign2Props) {
             <img
               src={signatureUrl}
               crossOrigin="anonymous"
-              onLoad={() =>
-                setImagesLoaded((p) => ({ ...p, sign: true }))
-              }
+              onLoad={() => setImagesLoaded((p) => ({ ...p, sign: true }))}
+              onError={() => setImagesLoaded((p) => ({ ...p, sign: true }))}
               style={{
                 height: "28px",
                 marginTop: "10px",
               }}
+              alt="Signature"
             />
-          ) : (
-            imagesLoaded.sign === false && setTimeout(() => setImagesLoaded((p) => ({ ...p, sign: true })), 0)
-          )}
+          ) : null}
         </div>
       </div>
 

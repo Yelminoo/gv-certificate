@@ -2,7 +2,7 @@
 
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import CertificateLayout from "@/components/CertificateLayout";
+
 import CertificateDesign2 from "@/components/CertificateDesign2";
 
 interface Certificate {
@@ -25,7 +25,9 @@ interface Certificate {
   signatureUrl?: string;
 }
 
-export default function QrPreviewPage() {
+import { Suspense } from "react";
+
+function QrPreviewPageInner() {
   const searchParams = useSearchParams();
   const [certificate, setCertificate] = useState<Certificate | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -90,5 +92,13 @@ export default function QrPreviewPage() {
         />
       </div>
     </main>
+  );
+}
+
+export default function QrPreviewPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+      <QrPreviewPageInner />
+    </Suspense>
   );
 }

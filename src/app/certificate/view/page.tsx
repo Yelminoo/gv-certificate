@@ -10,7 +10,26 @@ function CertificateView() {
   const searchParams = useSearchParams()
   const encodedData = searchParams.get("data")
   const encodedDbId = searchParams.get("dbId")
-  const [data, setData] = useState<any>(null)
+  interface CertificateData {
+    certificateNo: string;
+    date?: string;
+    issueDate?: string;
+    identification: string;
+    weight: string;
+    dimensions?: string;
+    cut?: string;
+    shape?: string;
+    color?: string;
+    comment1?: string;
+    comment2?: string;
+    origin?: string;
+    verifiedBy?: string;
+    certifiedBy?: string;
+    qrValue?: string;
+    imageUrl?: string;
+    signatureUrl?: string;
+  }
+  const [data, setData] = useState<CertificateData | null>(null)
   const [error, setError] = useState<string | null>(null)
   useEffect(() => {
     if (encodedData) {
@@ -22,9 +41,9 @@ function CertificateView() {
       return
     }
     if (encodedDbId) {
-      let dbId = ""
+      const dbId = encodedDbId;
       try {
-        dbId = atob(encodedDbId)
+        // Optionally validate dbId format here
       } catch {
         setError("Invalid database id")
         return
@@ -74,7 +93,7 @@ function CertificateView() {
       <div className="flex justify-center print:block">
         <CertificateLayout
           certificateNo={data.certificateNo}
-          date={data.date || data.issueDate}
+          date={data.date ?? data.issueDate ?? ""}
           identification={data.identification}
           weight={data.weight}
           dimensions={data.dimensions}

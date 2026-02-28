@@ -1,8 +1,8 @@
-"use client"
-
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import SignaturePad from "@/components/SignaturePad"
+"use client";
+import Image from "next/image";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import SignaturePad from "@/components/SignaturePad";
 
 export default function CertificateFormPage() {
   const router = useRouter()
@@ -223,13 +223,16 @@ export default function CertificateFormPage() {
             </div>
 
             {/* Fixed Frame Preview */}
-            <div className="flex-shrink-0">
+            <div className="shrink-0">
               <div className="w-48 h-48 border-2 border-gray-300 rounded-lg bg-white flex items-center justify-center overflow-hidden">
                 {form.imageUrl ? (
-                  <img 
-                    src={form.imageUrl} 
-                    alt="Gemstone preview" 
+                  <Image
+                    src={form.imageUrl}
+                    alt="Gemstone preview"
+                    width={192}
+                    height={192}
                     className="w-full h-full object-contain"
+                    priority
                   />
                 ) : (
                   <div className="text-center text-gray-400 p-4">

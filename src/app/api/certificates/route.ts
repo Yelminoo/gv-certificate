@@ -87,7 +87,7 @@ export async function GET(request: NextRequest) {
         }
       }
       if (!certificate && certNo) {
-        certificate = await prisma.certificate.findUnique({ where: { certificateNo: certNo } });
+        certificate = await prisma.certificate.findFirst({ where: { certificateNo: certNo } });
       }
       if (!certificate) {
         return NextResponse.json(

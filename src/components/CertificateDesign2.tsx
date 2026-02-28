@@ -7,6 +7,7 @@ import { toPng } from "html-to-image";
 interface CertificateDesign2Props {
   id: number;
   no: string;
+  qrValue?: string;
   date: string;
   identification: string;
   weight: string;
@@ -37,6 +38,8 @@ export default function CertificateDesign2(props: CertificateDesign2Props) {
     origin,
     identifiedBy,
     signatureUrl,
+    qrValue,
+    ...rest
   } = props;
 
   const certRef = useRef<HTMLDivElement>(null);
@@ -80,8 +83,6 @@ export default function CertificateDesign2(props: CertificateDesign2Props) {
     await waitForImages();
 
     const printWindow = window.open("", "_blank");
-    if (!printWindow) return;
-
     printWindow.document.write(`
       <html>
       <head>
@@ -145,13 +146,8 @@ export default function CertificateDesign2(props: CertificateDesign2Props) {
     };
   };
 
-  const encodedId =
-    typeof window !== "undefined" ? btoa(String(id)) : "";
-
-  const qrValue =
-    typeof window !== "undefined"
-      ? `${window.location.origin}/certificate/view?id=${encodedId}`
-      : "";
+  // Use qrValue prop if provided
+  const qr = qrValue || "";
 
   // Helper Row Component
   const Row = ({ label, value }: { label: string; value: string }) => (
@@ -233,37 +229,45 @@ export default function CertificateDesign2(props: CertificateDesign2Props) {
               justifyContent: "center",
             }}
           >
-            <QRCodeBox value={qrValue} />
+            {qr && <QRCodeBox value={qr} />}
           </div>
 
-          <img
-            src={imageUrl}
-            crossOrigin="anonymous"
-            onLoad={() =>
-              setImagesLoaded((p) => ({ ...p, gem: true }))
-            }
-            style={{
-              maxHeight: "100px",
-              marginTop: "10px",
-            }}
-          />
+          {imageUrl ? (
+            <img
+              src={imageUrl}
+              crossOrigin="anonymous"
+              onLoad={() =>
+                setImagesLoaded((p) => ({ ...p, gem: true }))
+              }
+              style={{
+                maxHeight: "100px",
+                marginTop: "10px",
+              }}
+            />
+          ) : (
+            imagesLoaded.gem === false && setTimeout(() => setImagesLoaded((p) => ({ ...p, gem: true })), 0)
+          )}
 
           <div style={{ marginTop: "10px", textAlign: "center" }}>
             <div>Origin : {origin}</div>
             <div>Identified By : {identifiedBy}</div>
           </div>
 
-          <img
-            src={signatureUrl}
-            crossOrigin="anonymous"
-            onLoad={() =>
-              setImagesLoaded((p) => ({ ...p, sign: true }))
-            }
-            style={{
-              height: "28px",
-              marginTop: "10px",
-            }}
-          />
+          {signatureUrl ? (
+            <img
+              src={signatureUrl}
+              crossOrigin="anonymous"
+              onLoad={() =>
+                setImagesLoaded((p) => ({ ...p, sign: true }))
+              }
+              style={{
+                height: "28px",
+                marginTop: "10px",
+              }}
+            />
+          ) : (
+            imagesLoaded.sign === false && setTimeout(() => setImagesLoaded((p) => ({ ...p, sign: true })), 0)
+          )}
         </div>
       </div>
 

@@ -1,3 +1,5 @@
+
+// ...existing code...
 import { prisma } from '@/lib/prisma'
 import { DashboardCharts } from './DashboardCharts'
 
@@ -67,7 +69,7 @@ export default async function DashboardPage() {
 
   return (
     <main className="min-h-screen bg-gray-50 p-8">
-      <h1 className="text-3xl font-bold mb-6 text-black">Certificate Dashboard</h1>
+      <h1 className="text-3xl font-bold mb-6 bg-red-700 text-white p-4 rounded-lg">Certificate Dashboard</h1>
       <p className="mb-4 text-gray-600">Total certificates: {certificates.length}</p>
 
       <DashboardCharts
@@ -79,29 +81,30 @@ export default async function DashboardPage() {
 
       <div className="overflow-x-auto">
         <table className="min-w-full border border-black bg-white rounded-lg">
-          <thead className="bg-white">
+          <thead className="bg-red-700">
             <tr>
-              <th className="px-3 py-2 border border-black text-black">Certificate No</th>
-              <th className="px-3 py-2 border border-black text-black">Issue Date</th>
-              <th className="px-3 py-2 border border-black text-black">Identification</th>
-              <th className="px-3 py-2 border border-black text-black">Weight</th>
-              <th className="px-3 py-2 border border-black text-black">Dimensions</th>
-              <th className="px-3 py-2 border border-black text-black">Cut</th>
-              <th className="px-3 py-2 border border-black text-black">Shape</th>
-              <th className="px-3 py-2 border border-black text-black">Color</th>
-              <th className="px-3 py-2 border border-black text-black">Comment1</th>
-              <th className="px-3 py-2 border border-black text-black">Comment2</th>
-              <th className="px-3 py-2 border border-black text-black">Origin</th>
-              <th className="px-3 py-2 border border-black text-black">Verified By</th>
-              <th className="px-3 py-2 border border-black text-black">Certified By</th>
-              <th className="px-3 py-2 border border-black text-black">Image</th>
-              <th className="px-3 py-2 border border-black text-black">Signature</th>
-              <th className="px-3 py-2 border border-black text-black">Created At</th>
+              <th className="px-3 py-2 border border-black text-white">Certificate No</th>
+              <th className="px-3 py-2 border border-black text-white">Issue Date</th>
+              <th className="px-3 py-2 border border-black text-white">Identification</th>
+              <th className="px-3 py-2 border border-black text-white">Weight</th>
+              <th className="px-3 py-2 border border-black text-white">Dimensions</th>
+              <th className="px-3 py-2 border border-black text-white">Cut</th>
+              <th className="px-3 py-2 border border-black text-white">Shape</th>
+              <th className="px-3 py-2 border border-black text-white">Color</th>
+              <th className="px-3 py-2 border border-black text-white">Comment1</th>
+              <th className="px-3 py-2 border border-black text-white">Comment2</th>
+              <th className="px-3 py-2 border border-black text-white">Origin</th>
+              <th className="px-3 py-2 border border-black text-white">Verified By</th>
+              <th className="px-3 py-2 border border-black text-white">Certified By</th>
+              <th className="px-3 py-2 border border-black text-white">Image</th>
+              <th className="px-3 py-2 border border-black text-white">Signature</th>
+              <th className="px-3 py-2 border border-black text-white">Created At</th>
+              <th className="px-3 py-2 border border-black text-white">Actions</th>
             </tr>
           </thead>
           <tbody>
             {certificates.map(cert => (
-              <tr key={cert.id} className="hover:bg-black hover:text-white transition-colors">
+              <tr key={cert.id} className="hover:bg-black hover:text-white transition-colors text-black">
                 <td className="px-3 py-2 border border-black font-mono">{cert.certificateNo}</td>
                 <td className="px-3 py-2 border border-black">{cert.issueDate}</td>
                 <td className="px-3 py-2 border border-black">{cert.identification}</td>
@@ -126,6 +129,17 @@ export default async function DashboardPage() {
                   ) : '-'}
                 </td>
                 <td className="px-3 py-2 border border-black font-mono text-xs">{cert.createdAt?.toString()}</td>
+                <td className="px-3 py-2 border border-black flex gap-2 justify-center">
+                  <a
+                    href={`/certificate/preview?data=${btoa(JSON.stringify(cert))}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-white text-black border border-red-700 hover:bg-red-700 hover:text-white font-semibold px-3 py-1 rounded transition-colors"
+                  >
+                    Preview
+                  </a>
+                  <DeleteButton dbId={cert.id} />
+                </td>
               </tr>
             ))}
           </tbody>
@@ -134,3 +148,5 @@ export default async function DashboardPage() {
     </main>
   )
 }
+
+import DeleteButton from "./DeleteButton";

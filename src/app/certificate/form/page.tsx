@@ -84,20 +84,30 @@ export default function CertificateFormPage() {
 
     // Save certificate to database (D1 or file logs)
     try {
-      await fetch('/api/certificates', {
+      const res = await fetch('/api/certificates', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(form),
       })
+      const result = await res.json();
+      // Debug: log API result to verify dbId
+      console.log('Certificate API result:', result);
+      if (result.success && result.dbId && result.certificateNo) {
+        // Encode both dbId and certificateNo separated by _
+        const qrPayload = `${result.dbId}_${result.certificateNo}`;
+        const encodedData = btoa(JSON.stringify({ ...form, dbId: result.dbId }));
+        // Optionally, you can pass the QR payload for preview
+        router.push(`/certificate/preview?data=${encodedData}&qr=${btoa(qrPayload)}`);
+      } else {
+        alert('Failed to save certificate: missing db id')
+        return;
+      }
     } catch (error) {
       console.error('Failed to save certificate:', error)
       // Continue even if saving fails
     }
-
-    const encodedData = btoa(JSON.stringify(form))
-    router.push(`/certificate/preview?data=${encodedData}`)
   }
 
   return (

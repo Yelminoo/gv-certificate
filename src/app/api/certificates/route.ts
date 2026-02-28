@@ -1,3 +1,21 @@
+export async function DELETE(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const dbId = searchParams.get('dbId') || searchParams.get('id');
+    if (!dbId) {
+      return NextResponse.json({ error: 'Missing dbId' }, { status: 400 });
+    }
+    const idInt = parseInt(dbId, 10);
+    if (isNaN(idInt)) {
+      return NextResponse.json({ error: 'Invalid dbId' }, { status: 400 });
+    }
+    const deleted = await prisma.certificate.delete({ where: { id: idInt } });
+    return NextResponse.json({ success: true, deleted });
+  } catch (error) {
+    console.error('Error deleting certificate:', error);
+    return NextResponse.json({ error: 'Failed to delete certificate' }, { status: 500 });
+  }
+}
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
@@ -25,11 +43,13 @@ export async function POST(request: NextRequest) {
       signatureUrl: data.signatureUrl ?? null,
     }
 
-    await prisma.certificate.create({ data: certificateData })
+    const created = await prisma.certificate.create({ data: certificateData })
 
     return NextResponse.json({
       success: true,
       message: 'Certificate saved successfully',
+      dbId: created.id,
+      certificateNo: created.certificateNo,
     })
   } catch (error) {
     const errorCode =
@@ -52,14 +72,23 @@ export async function POST(request: NextRequest) {
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
+
     const certNo = searchParams.get('certNo')
+    const dbId = searchParams.get('dbId')
     const search = searchParams.get('search')
 
-    if (certNo) {
-      const certificate = await prisma.certificate.findUnique({
-        where: { certificateNo: certNo },
-      })
-
+    if (certNo || dbId) {
+      let certificate = null;
+      if (dbId) {
+        // Try to find by database id (integer)
+        const idInt = parseInt(dbId, 10);
+        if (!isNaN(idInt)) {
+          certificate = await prisma.certificate.findUnique({ where: { id: idInt } });
+        }
+      }
+      if (!certificate && certNo) {
+        certificate = await prisma.certificate.findUnique({ where: { certificateNo: certNo } });
+      }
       if (!certificate) {
         return NextResponse.json(
           { error: 'Certificate not found' },

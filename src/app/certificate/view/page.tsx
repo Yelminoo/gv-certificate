@@ -4,22 +4,58 @@ import { useSearchParams } from "next/navigation"
 import { Suspense } from "react"
 import CertificateLayout from "@/components/CertificateLayout"
 
+import { useEffect, useState } from "react"
+
 function CertificateView() {
   const searchParams = useSearchParams()
-  const encoded = searchParams.get("data")
-
-  if (!encoded) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        Invalid or missing certificate data
-      </div>
-    )
-  }
-
-  const data = JSON.parse(atob(encoded))
+  const encodedData = searchParams.get("data")
+  const encodedDbId = searchParams.get("dbId")
+  const [data, setData] = useState<any>(null)
+  const [error, setError] = useState<string | null>(null)
+  useEffect(() => {
+    if (encodedData) {
+      try {
+        setData(JSON.parse(atob(encodedData)))
+      } catch {
+        setError("Invalid certificate data format")
+      }
+      return
+    }
+    if (encodedDbId) {
+      let dbId = ""
+      try {
+        dbId = atob(encodedDbId)
+      } catch {
+        setError("Invalid database id")
+        return
+      }
+      fetch(`/api/certificates?dbId=${encodeURIComponent(dbId)}`)
+        .then(async (res) => {
+          if (!res.ok) throw new Error("Certificate not found")
+          return res.json()
+        })
+        .then((cert) => setData(cert))
+        .catch((err) => setError(err.message))
+      return
+    }
+    setError("Invalid or missing certificate data")
+  }, [encodedData, encodedDbId])
 
   const handlePrint = () => {
     window.print()
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-red-700">
+        {error}
+      </div>
+    )
+  }
+  if (!data) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">Loading...</div>
+    )
   }
 
   return (
@@ -38,7 +74,7 @@ function CertificateView() {
       <div className="flex justify-center print:block">
         <CertificateLayout
           certificateNo={data.certificateNo}
-          date={data.date}
+          date={data.date || data.issueDate}
           identification={data.identification}
           weight={data.weight}
           dimensions={data.dimensions}

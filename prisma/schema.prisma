@@ -15,7 +15,7 @@ datasource db {
 
 model Certificate {
   id             Int      @id @default(autoincrement())
-  certificateNo  String   @unique @map("certificate_no")
+  certificateNo  String   @map("certificate_no")
   issueDate      String   @map("issue_date")
   identification String
   weight         String
